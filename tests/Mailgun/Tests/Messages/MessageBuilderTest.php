@@ -9,10 +9,12 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 	public function setUp(){ 
 		$this->client = new MailgunTest("My-Super-Awesome-API-Key", "samples.mailgun.org", false);	
 	}
+
 	public function testBlankInstantiation(){
 		$message = $this->client->MessageBuilder();
 		$this->assertTrue(is_array($message->getMessage()));
 	}
+
 	public function testCountersSetToZero(){
 		$message = $this->client->MessageBuilder();
 
@@ -28,24 +30,28 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
         $this->assertEquals(0, $propertyValue['attributes']['custom_option']);
 		$this->assertEquals(0, $propertyValue['attributes']['tag']);
 	}
+
 	public function testAddToRecipient(){
 		$message = $this->client->MessageBuilder();
 		$message->addToRecipient("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("to" => array("'Test User' <test@samples.mailgun.org>")), $messageObj);
 	}
+
 	public function testAddCcRecipient(){
 		$message = $this->client->MessageBuilder();
 		$message->addCcRecipient("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("cc" => array("'Test User' <test@samples.mailgun.org>")), $messageObj);
 	}
+
 	public function testAddBccRecipient(){
 		$message = $this->client->MessageBuilder();
 		$message->addBccRecipient("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("bcc" => array("'Test User' <test@samples.mailgun.org>")), $messageObj);
 	}
+
     public function testToRecipientCount() {
         $message = $this->client->MessageBuilder();
         $message->addToRecipient("test-user@samples.mailgun.org", array("first" => "Test", "last" => "User"));
@@ -56,6 +62,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
         $array = $property->getValue($message);
         $this->assertEquals(1, $array['recipients']['to']);
     }
+
     public function testCcRecipientCount() {
         $message = $this->client->MessageBuilder();
         $message->addCcRecipient("test-user@samples.mailgun.org", array("first" => "Test", "last" => "User"));
@@ -66,6 +73,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
         $array = $property->getValue($message);
         $this->assertEquals(1, $array['recipients']['cc']);
     }
+
     public function testBccRecipientCount() {
         $message = $this->client->MessageBuilder();
         $message->addBccRecipient("test-user@samples.mailgun.org", array("first" => "Test", "last" => "User"));
@@ -76,42 +84,49 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
         $array = $property->getValue($message);
         $this->assertEquals(1, $array['recipients']['bcc']);
     }
+
 	public function testSetFromAddress(){
 		$message = $this->client->MessageBuilder();
 		$message->setFromAddress("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("from" => array("'Test User' <test@samples.mailgun.org>")), $messageObj);
 	}
+
 	public function testSetReplyTo(){
 		$message = $this->client->MessageBuilder();
 		$message->setReplyToAddress("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("h:reply-to" => "'Test User' <test@samples.mailgun.org>"), $messageObj);
 	}
+
 	public function testSetSubject(){
 		$message = $this->client->MessageBuilder();
 		$message->setSubject("Test Subject");
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("subject" => "Test Subject"), $messageObj);
 	}
+
 	public function testAddCustomHeader(){
 		$message = $this->client->MessageBuilder();
 		$message->addCustomHeader("My-Header", "123");
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("h:My-Header" => array("123")), $messageObj);
 	}
+
 	public function testSetTextBody(){
 		$message = $this->client->MessageBuilder();
 		$message->setTextBody("This is the text body!");
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("text" => "This is the text body!"), $messageObj);
 	}
+
 	public function testSetHtmlBody(){
 		$message = $this->client->MessageBuilder();
 		$message->setHtmlBody("<html><body>This is an awesome email</body></html>");
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("html" => "<html><body>This is an awesome email</body></html>"), $messageObj);
 	}
+
 	public function testAddAttachments(){
 		$message = $this->client->MessageBuilder();
 		$message->addAttachment("@../TestAssets/mailgun_icon.png");
@@ -122,6 +137,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 							array('filePath' => "@../TestAssets/rackspace_logo.png",
 								  'remoteName' => null)), $messageObj["attachment"]);
 	}
+
 	public function testAddInlineImages(){
 		$message = $this->client->MessageBuilder();
 		$message->addInlineImage("@../TestAssets/mailgun_icon.png");
@@ -132,6 +148,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 							array('filePath' => "@../TestAssets/rackspace_logo.png",
 								  'remoteName' => null)), $messageObj['inline']);
 	}
+
 	public function testAddAttachmentsPostName(){
 		$message = $this->client->MessageBuilder();
 		$message->addAttachment('@../TestAssets/mailgun_icon.png', 'mg_icon.png');
@@ -142,6 +159,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 							array('filePath' => '@../TestAssets/rackspace_logo.png',
 								  'remoteName' => 'rs_logo.png')), $messageObj["attachment"]);
 	}
+
 	public function testAddInlineImagePostName(){
 		$message = $this->client->MessageBuilder();
 		$message->addInlineImage('@../TestAssets/mailgun_icon.png', 'mg_icon.png');
@@ -152,7 +170,8 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 							array('filePath' => '@../TestAssets/rackspace_logo.png',
 								  'remoteName' => 'rs_logo.png')), $messageObj['inline']);
 	}
-	public function testsetTestMode(){
+
+	public function testSetTestMode(){
 		$message = $this->client->MessageBuilder();
 		$message->setTestMode(true);
 		$messageObj = $message->getMessage();
@@ -167,6 +186,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("o:testmode" => "no"), $messageObj);
 	}
+
 	public function addCampaignId(){
 		$message = $this->client->MessageBuilder();
 		$message->addCampaignId("ABC123");
@@ -176,6 +196,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("o:campaign" => array("ABC123", "XYZ987", "TUV456")), $messageObj);
 	}
+
 	public function testSetDkim(){
 		$message = $this->client->MessageBuilder();
 		$message->setDkim(true);
@@ -191,6 +212,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("o:dkim" => "no"), $messageObj);
 	}
+
 	public function testSetClickTracking(){
 		$message = $this->client->MessageBuilder();
 		$message->setClickTracking(true);
@@ -206,6 +228,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("o:tracking-clicks" => "no"), $messageObj);
 	}
+
 	public function testSetOpenTracking(){
 		$message = $this->client->MessageBuilder();
 		$message->setOpenTracking(true);
@@ -221,6 +244,7 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("o:tracking-opens" => "no"), $messageObj);
 	}
+
 	public function testSetDeliveryTime(){
 		$message = $this->client->MessageBuilder();
 		$message->setDeliveryTime("January 15, 2014 8:00AM", "CST");
@@ -239,12 +263,14 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("o:deliverytime" => "Sat, 06 Jul 2013 08:00:00 -0500"), $messageObj);
 	}
+
 	public function testAddCustomData(){
 		$message = $this->client->MessageBuilder();
 		$message->addCustomData("My-Super-Awesome-Data", array("What" => "Mailgun Rocks!"));
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("v:My-Super-Awesome-Data" => "{\"What\":\"Mailgun Rocks!\"}"), $messageObj);
 	}
+
 	public function testAddCustomParameter(){
 		$message = $this->client->MessageBuilder();
 		$message->addCustomParameter("my-option", "yes");
@@ -252,6 +278,52 @@ class MessageBuilderTest extends \Mailgun\Tests\MailgunTestCase{
 		$messageObj = $message->getMessage();
 		$this->assertEquals(array("my-option" => array("yes"), "o:my-other-option" => array("no")), $messageObj);
 	}
+
+	public function testSendComplexMessageBuilder(){
+		$message = $this->client->MessageBuilder();
+		$message->addToRecipient("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
+		$message->addCcRecipient("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
+		$message->addBccRecipient("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
+		$message->setFromAddress("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
+		$message->setReplyToAddress("test@samples.mailgun.org", array("first" => "Test", "last" => "User"));
+		$message->setSubject("Test Subject");
+		$message->addCustomHeader("My-Header", "123");
+		$message->setTextBody("This is the text body!");
+		$message->setHtmlBody("<html><body>This is an awesome email</body></html>");
+		$message->addAttachment("@../TestAssets/rackspace_logo.png");
+		$message->addInlineImage("@../TestAssets/rackspace_logo.png");
+		$message->addAttachment('@../TestAssets/rackspace_logo.png', 'rs_logo.png');
+		$message->addInlineImage('@../TestAssets/rackspace_logo.png', 'rs_logo.png');
+		$message->setTestMode(true);
+		$message->addCampaignId("ABC123");
+		$message->setDkim(true);
+		$message->setClickTracking(true);
+		$message->setOpenTracking(true);
+		$message->setDeliveryTime("January 15, 2014 8:00AM", "CST");
+		$message->addCustomData("My-Super-Awesome-Data", array("What" => "Mailgun Rocks!"));
+		$message->addCustomParameter("my-option", "yes");
+
+		$result = $this->client->sendMessage("test.mailgun.org", $message->getMessage(), $message->getFiles());
+
+		$requestBody = $result->http_request_body[0]->getPostFields();
+		$requestFiles = $result->http_request_body[0]->getPostFiles();
+		$requestUrl = $result->http_response_body;
+
+		$this->assertEquals('test@test.mailgun.org', $requestBody->get('to'));
+		$this->assertEquals('sender@test.mailgun.org', $requestBody->get('from'));
+		$this->assertEquals('This is my test subject', $requestBody->get('subject'));
+		$this->assertEquals('Testing!', $requestBody->get('text'));
+
+		$file = $requestFiles["attachment"][0];
+		$this->assertEquals('tests/Mailgun/Tests/TestAssets/mailgun_icon.png', $file->getFilename());
+		$this->assertEquals('test.png', $file->getPostname());
+		$this->assertEquals('attachment', $file->getFieldname());
+		$this->assertEquals('image/png', $file->getContentType());
+
+		$this->assertEquals('https://api.mailgun.net/v2/test.mailgun.org/messages', $requestUrl->getEffectiveUrl());
+		
+	}
+
 }
 
 ?>
